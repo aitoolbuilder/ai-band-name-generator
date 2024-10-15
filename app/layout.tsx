@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import Link from "next/link";
 import { FaGithub } from "react-icons/fa";
 import { TbWorldWww } from "react-icons/tb";
+import Script from 'next/script';
 import "./globals.css";
 
 const geistSans = localFont({
@@ -18,7 +19,11 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: "Band Name Generator",
-  description: "Free band name generator with over 10 million combinations",
+  description: "AI band name generator with OpenAI",
+  metadataBase: new URL('https://aibandnamegenerator.com'),
+  alternates: {
+    canonical: '/',
+  },
 };
 
 export default function RootLayout({
@@ -26,8 +31,32 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const gaTrackingId = process.env.NEXT_PUBLIC_GA_TRACKING_ID;
+
   return (
     <html lang="en">
+      <head>
+        {gaTrackingId && (
+          <>
+            <Script
+              strategy="afterInteractive"
+              src={`https://www.googletagmanager.com/gtag/js?id=${gaTrackingId}`}
+            />
+            <Script
+              id="google-analytics"
+              strategy="afterInteractive"
+              dangerouslySetInnerHTML={{
+                __html: `
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  gtag('js', new Date());
+                  gtag('config', '${gaTrackingId}');
+                `,
+              }}
+            />
+          </>
+        )}
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-900 text-white flex flex-col min-h-screen`}
       >

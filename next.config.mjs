@@ -2,8 +2,16 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  // 添加以下行
   output: 'standalone',
+  // 添加以下配置
+  async rewrites() {
+    return [
+      {
+        source: '/sitemap.xml',
+        destination: '/api/sitemap',
+      },
+    ]
+  },
 };
 
 export default nextConfig;
